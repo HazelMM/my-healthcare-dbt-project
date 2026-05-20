@@ -15,8 +15,17 @@ We follow strict dbt design paradigms.
 * Primary keys must be explicitly named `[entity_id]` (e.g., `patient_id`, `observation_id`). Foreign keys must reference their parent table name.
 
 ## Domain Metric & Semantic Definitions
-* **Chronic Disease Definition:** A condition is classified as a chronic disease if its `clinical_semantic_type` is 'disorder' and its SNOMED code maps to long-term monitoring cohorts (Diabetes, Hypertension, Chronic Kidney Disease).
+* **Chronic Disease Definition:** A condition is classified as a chronic disease if its `clinical_semantic_tag` is 'disorder' and its SNOMED code maps to long-term monitoring cohorts (Diabetes, Hypertension, Chronic Kidney Disease).
 * **Biomarker / Lab Abnormality:** Look at the `OBSERVATIONS` table. You must construct metrics parsing out the `value` numeric limits against standard clinical reference ranges (e.g., tracking HbA1c > 6.5% for diabetes cohorts).
+
+## Clinical Semantic Parsing Rules
+* Conditions containing SNOMED semantic tags in parentheses should be split into:
+  * `condition_name`
+  * `clinical_semantic_tag`
+* Example:
+  * `Hypoxemia (disorder)` → `condition_name = 'Hypoxemia'`, `clinical_semantic_tag = 'disorder'`
+* If no semantic tag exists in the source description, leave `clinical_semantic_tag` as NULL.
+* Never infer or hallucinate missing semantic ontology classifications inside foundational staging models.
 
 ## Code Style Restrictions
 * SQL keywords (`select`, `from`, `where`, `join`, `on`, `group by`) must be written in lowercase.
