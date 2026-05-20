@@ -22,3 +22,21 @@ We follow strict dbt design paradigms.
 * SQL keywords (`select`, `from`, `where`, `join`, `on`, `group by`) must be written in lowercase.
 * Use explicit, meaningful alias suffixes for tables (e.g., `from stg_patients as p`).
 * Always isolate regex transformations inside the staging layer models. Do not write raw regex logic inside intermediate or marts layers.
+
+## Model Grain Requirements
+* Every model must declare and preserve a clearly defined grain.
+* Avoid fanout joins that duplicate patient observations unintentionally.
+* Intermediate and mart models must document the intended grain in comments.
+* Longitudinal models should preserve event timestamps unless explicitly aggregated.
+
+## Semantic Layer Principles
+* Models should prioritize reusable clinical entities over dashboard-specific aggregations.
+* Clinical concepts must remain semantically interpretable for downstream AI and machine learning workflows.
+* Prefer normalized longitudinal structures over denormalized reporting tables.
+* Preserve clinical context and temporal relationships whenever possible.
+
+## AI-Assisted Development Expectations
+* Generate modular dbt models incrementally rather than attempting full-project generation.
+* Ask clarifying questions when model grain or clinical semantics are ambiguous.
+* Favor maintainability and semantic clarity over SQL compactness.
+* When uncertain about clinical interpretation, preserve raw source context rather than infer unsupported logic.
