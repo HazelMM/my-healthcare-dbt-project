@@ -1,0 +1,40 @@
+version: 2
+
+seeds:
+  - name: biomarker_reference_ranges
+    description: "{{ doc('biomarker_reference_ranges') }}"
+    config:
+      tags: ['reference', 'seed']
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - loinc_code
+              - category
+    columns:
+      - name: loinc_code
+        description: "{{ doc('biomarker_reference_ranges__loinc_code') }}"
+        tests:
+          - not_null
+
+      - name: observation_name
+        description: "{{ doc('biomarker_reference_ranges__observation_name') }}"
+        tests:
+          - not_null
+
+      - name: category
+        description: "{{ doc('biomarker_reference_ranges__category') }}"
+        tests:
+          - not_null
+
+      - name: range_low
+        description: "{{ doc('biomarker_reference_ranges__range_low') }}"
+
+      - name: range_high
+        description: "{{ doc('biomarker_reference_ranges__range_high') }}"
+
+      - name: unit
+        description: "{{ doc('biomarker_reference_ranges__unit') }}"
+
+      - name: notes
+        description: "{{ doc('biomarker_reference_ranges__notes') }}"

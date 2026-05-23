@@ -1,0 +1,161 @@
+loinc_code,observation_name,category,range_low,range_high,unit,notes
+8302-2,Body Height,anthropometric,,,cm,No clinical range; tracked for growth/BMI calculation
+29463-7,Body Weight,anthropometric,,,kg,No single range; context-dependent
+39156-5,Body Mass Index,anthropometric,18.5,24.9,kg/m2,Underweight <18.5; Overweight 25-29.9; Obese 30+
+59576-9,Body Mass Index Percentile Per Age and Gender,anthropometric,5,85,%,Pediatric; Underweight <5th; Overweight 85-95th; Obese >95th
+77606-2,Weight-for-length Per Age and Sex,anthropometric,5,85,%,Pediatric growth indicator
+9843-4,Head Occipital-frontal Circumference,anthropometric,,,cm,Pediatric; age/sex dependent
+8480-6,Systolic Blood Pressure,vital-signs,90,120,mm[Hg],Elevated 120-129; High Stage 1 130-139; High Stage 2 140+
+8462-4,Diastolic Blood Pressure,vital-signs,60,80,mm[Hg],High Stage 1 80-89; High Stage 2 90+
+8478-0,Mean Blood Pressure,vital-signs,70,100,mm[Hg],Derived from systolic and diastolic
+8867-4,Heart Rate,vital-signs,60,100,/min,Bradycardia <60; Tachycardia >100
+9279-1,Respiratory Rate,vital-signs,12,20,/min,Bradypnea <12; Tachypnea >20
+8310-5,Body Temperature,vital-signs,36.1,37.2,Cel,Hypothermia <36.1; Fever >37.2 (38 clinically)
+2708-6,Oxygen Saturation in Arterial Blood,vital-signs,95,100,%,Hypoxemia <90; Concerning <95
+2713-6,Oxygen Saturation,vital-signs,95,100,%,Pulse ox equivalent
+10230-1,Left Ventricular Ejection Fraction,vital-signs,55,70,%,Reduced <40; Borderline 40-49; Preserved 50+
+44963-7,Capillary Refill Time of Nail Bed,vital-signs,,,,Categorical; normal <2 seconds
+4548-4,Hemoglobin A1c/Hemoglobin.total in Blood,metabolic,0,5.6,%,Prediabetes 5.7-6.4; Diabetes 6.5+
+2339-0,Glucose in Blood,metabolic,70,99,mg/dL,Fasting; Prediabetes 100-125; Diabetes 126+
+2345-7,Glucose in Serum or Plasma,metabolic,70,99,mg/dL,Fasting glucose reference
+5792-7,Glucose in Urine by Test Strip,metabolic,0,0.8,mg/dL,Glycosuria present above renal threshold ~180 mg/dL blood glucose
+2093-3,Cholesterol in Serum or Plasma,lipid,0,199,mg/dL,Borderline 200-239; High 240+
+2571-8,Triglycerides,lipid,0,149,mg/dL,Borderline 150-199; High 200-499; Very high 500+
+18262-6,Low Density Lipoprotein Cholesterol,lipid,0,99,mg/dL,Near optimal 100-129; Borderline 130-159; High 160+
+2085-9,High Density Lipoprotein Cholesterol,lipid,40,999,mg/dL,Low risk >60; High risk <40
+33914-3,Glomerular Filtration Rate/1.73 sq M Predicted,renal,60,999,mL/min/{1.73_m2},CKD G1 90+; G2 60-89; G3 30-59; G4 15-29; G5 <15
+2160-0,Creatinine in Serum or Plasma,renal,0.6,1.2,mg/dL,Female 0.5-1.1; Male 0.7-1.3
+38483-4,Creatinine,renal,0.6,1.2,mg/dL,Duplicate code; same range as 2160-0
+3094-0,Urea Nitrogen in Serum or Plasma,renal,6,20,mg/dL,BUN; elevated may indicate kidney dysfunction or dehydration
+14959-1,Microalbumin Creatinine Ratio,renal,0,30,mg/g,Microalbuminuria 30-300; Macroalbuminuria >300
+5804-0,Protein in Urine by Test Strip,renal,0,14,mg/dL,Proteinuria suggests renal involvement
+1751-7,Albumin in Serum or Plasma,hepatic,3.4,5.4,g/dL,Low albumin may indicate liver disease or malnutrition
+1742-6,Alanine Aminotransferase in Serum or Plasma,hepatic,7,56,U/L,Elevated indicates hepatocellular damage
+1920-8,Aspartate Aminotransferase in Serum or Plasma,hepatic,10,40,U/L,Elevated in liver or muscle disease
+6768-6,Alkaline Phosphatase in Serum or Plasma,hepatic,44,147,U/L,Elevated in liver or bone disease
+1975-2,Bilirubin Total in Serum or Plasma,hepatic,0.1,1.2,mg/dL,Jaundice typically >2.5
+42719-5,Bilirubin Total Elevated,hepatic,0.1,1.2,mg/dL,Same reference as 1975-2
+10834-0,Globulin in Serum by Calculation,hepatic,2,3.5,g/dL,Elevated in chronic inflammation or liver disease
+2885-2,Protein in Serum or Plasma,hepatic,6,8.3,g/dL,Total protein; includes albumin and globulin
+718-7,Hemoglobin in Blood,hematology,12,17.5,g/dL,Female 12-15.5; Male 13.5-17.5
+789-8,Erythrocytes in Blood by Automated Count,hematology,4.2,5.9,10*6/uL,Female 4.2-5.4; Male 4.7-5.9
+26453-1,Red Blood Cell,hematology,4.2,5.9,10*6/uL,Same reference as 789-8
+4544-3,Hematocrit by Automated Count,hematology,36,52,%,Female 36-48; Male 41-53
+20570-8,Hematocrit,hematology,36,52,%,Same reference as 4544-3
+6690-2,Leukocytes in Blood by Automated Count,hematology,4.5,11,10*3/uL,Leukopenia <4.5; Leukocytosis >11
+26464-8,White Blood Cell,hematology,4.5,11,K/uL,Same reference as 6690-2
+777-3,Platelets in Blood by Automated Count,hematology,150,400,10*3/uL,Thrombocytopenia <150; Thrombocytosis >400
+26515-7,Platelet Count,hematology,150,400,K/uL,Same reference as 777-3
+787-2,MCV by Automated Count,hematology,80,100,fL,Microcytic <80; Macrocytic >100
+30428-7,MCV,hematology,80,100,fL,Same reference as 787-2
+785-6,MCH by Automated Count,hematology,27,33,pg,Low in iron deficiency; high in B12/folate deficiency
+786-4,MCHC by Automated Count,hematology,32,36,g/dL,Low in iron deficiency anemia
+788-0,Erythrocyte Distribution Width Ratio by Automated Count,hematology,11.5,14.5,%,Elevated indicates anisocytosis
+30385-9,RBC Distribution Width,hematology,11.5,14.5,%,Same reference as 788-0
+21000-5,Erythrocyte Distribution Width by Automated Count,hematology,80,100,fL,Entitic volume RDW
+751-8,Neutrophils in Blood by Automated Count,hematology,1.8,7.7,10*3/uL,Neutropenia <1.8; Neutrophilia >7.7
+770-8,Neutrophils/100 Leukocytes in Blood by Automated Count,hematology,50,70,%,Differential percentage
+731-0,Lymphocytes in Blood by Automated Count,hematology,1,4.8,10*3/uL,Lymphopenia <1; Lymphocytosis >4.8
+736-9,Lymphocytes/100 Leukocytes in Blood by Automated Count,hematology,20,40,%,Differential percentage
+742-7,Monocytes in Blood by Automated Count,hematology,0.2,0.95,10*3/uL,Monocytosis >0.95
+5905-5,Monocytes/100 Leukocytes in Blood by Automated Count,hematology,2,8,%,Differential percentage
+711-2,Eosinophils in Blood by Automated Count,hematology,0.1,0.5,10*3/uL,Eosinophilia >0.5; often allergic or parasitic
+713-8,Eosinophils/100 Leukocytes in Blood by Automated Count,hematology,1,4,%,Differential percentage
+704-7,Basophils in Blood by Automated Count,hematology,0,0.1,10*3/uL,Basophilia >0.1 rare
+706-2,Basophils/100 Leukocytes in Blood by Automated Count,hematology,0,1,%,Differential percentage
+32207-3,Platelet Distribution Width by Automated Count,hematology,9,17,fL,Elevated PDW indicates platelet size variability
+32623-1,Platelet Mean Volume by Automated Count,hematology,7.5,12.5,fL,Elevated MPV may indicate platelet activation
+2951-2,Sodium in Serum or Plasma,electrolyte,136,145,mmol/L,Hyponatremia <136; Hypernatremia >145
+2947-0,Sodium,electrolyte,136,145,mmol/L,Same reference as 2951-2
+2823-3,Potassium in Serum or Plasma,electrolyte,3.5,5,mmol/L,Hypokalemia <3.5; Hyperkalemia >5
+6298-4,Potassium,electrolyte,3.5,5,mmol/L,Same reference as 2823-3
+2075-0,Chloride in Serum or Plasma,electrolyte,98,106,mmol/L,Hypochloremia <98; Hyperchloremia >106
+2069-3,Chloride,electrolyte,98,106,mmol/L,Same reference as 2075-0
+2028-9,Carbon Dioxide Total in Serum or Plasma,electrolyte,22,29,mmol/L,Low may indicate metabolic acidosis
+20565-8,Carbon Dioxide,electrolyte,22,29,mmol/L,Same reference as 2028-9
+33037-3,Anion Gap,electrolyte,3,11,mmol/L,Elevated anion gap suggests metabolic acidosis
+17861-6,Calcium in Serum or Plasma,electrolyte,8.5,10.5,mg/dL,Hypocalcemia <8.5; Hypercalcemia >10.5
+49765-1,Calcium,electrolyte,8.5,10.5,mg/dL,Same reference as 17861-6
+19123-9,Magnesium in Serum or Plasma,electrolyte,1.7,2.2,mg/dL,Hypomagnesemia <1.7; Hypermagnesemia >2.2
+2703-7,Oxygen Partial Pressure in Arterial Blood,blood-gas,75,100,mm[Hg],Hypoxemia <75; Critical <60
+2019-8,Carbon Dioxide Partial Pressure in Arterial Blood,blood-gas,35,45,mm[Hg],Hypocapnia <35; Hypercapnia >45
+2744-1,pH of Arterial Blood,blood-gas,7.35,7.45,[pH],Acidemia <7.35; Alkalemia >7.45
+1960-4,Bicarbonate in Arterial Blood,blood-gas,22,26,mmol/L,Metabolic component of acid-base balance
+19994-3,Oxygen/Inspired Gas Setting Ventilator,blood-gas,21,100,%,FiO2; 21% is room air
+5902-2,Prothrombin Time,coagulation,11,13.5,s,Prolonged in anticoagulation therapy or coagulopathy
+6301-6,INR in Platelet Poor Plasma,coagulation,0.8,1.1,{INR},Therapeutic anticoagulation target 2-3
+48065-7,Fibrin D-dimer FEU in Platelet Poor Plasma,coagulation,0,0.5,ug/mL,Elevated suggests thrombosis or inflammation
+2276-4,Ferritin in Serum or Plasma,iron,12,300,ug/L,Female 12-150; Male 12-300; Low indicates iron deficiency
+2498-4,Iron in Serum or Plasma,iron,60,170,ug/dL,Low in iron deficiency; high in hemochromatosis
+2500-7,Iron Binding Capacity in Serum or Plasma,iron,250,370,ug/dL,TIBC; elevated in iron deficiency
+2502-3,Iron Saturation in Serum or Plasma,iron,20,50,%,Low in iron deficiency; high in hemochromatosis
+3016-3,Thyrotropin in Serum or Plasma,thyroid,0.4,4,m[IU]/L,Hypothyroid >4; Hyperthyroid <0.4
+3024-7,Thyroxine Free in Serum or Plasma,thyroid,0.8,1.8,ng/dl,Low in hypothyroidism; high in hyperthyroidism
+33762-6,NT-proBNP,cardiac,0,125,pg/mL,Heart failure risk >125; significant >900
+89579-7,Troponin I Cardiac by High Sensitivity Method,cardiac,0,0.04,pg/mL,Myocardial injury if elevated
+59032-3,Lactate in Blood,cardiac,0.5,2,mmol/L,Elevated suggests tissue hypoperfusion
+33959-8,Procalcitonin in Serum or Plasma,cardiac,0,0.1,ng/mL,Elevated in bacterial infection/sepsis
+1988-5,C Reactive Protein in Serum or Plasma,cardiac,0,1,mg/L,Elevated in inflammation; high sensitivity CRP for cardiac risk
+14804-9,Lactate Dehydrogenase in Serum or Plasma,cardiac,122,222,U/L,Elevated in tissue damage; nonspecific
+2157-6,Creatine Kinase in Serum or Plasma,cardiac,30,200,U/L,Elevated in muscle or cardiac injury
+8478-0,Mean Blood Pressure,cardiac,70,100,mm[Hg],MAP; <60 suggests inadequate perfusion
+2857-1,Prostate Specific Antigen in Serum or Plasma,oncology,0,4,ng/mL,Elevated warrants further evaluation; age-dependent
+21908-9,Stage Group Clinical Cancer,oncology,,,,Categorical; not numeric
+21924-6,Tumor Marker Cancer,oncology,,,,Categorical; result-dependent
+85318-4,HER2 Presence in Breast Cancer Specimen by FISH,oncology,,,ratio,Categorical/ratio; positive >2.0
+85319-2,HER2 Presence in Breast Cancer Specimen by Immune Stain,oncology,,,,Categorical; 0/1+ negative; 2+ equivocal; 3+ positive
+85337-4,Estrogen Receptor Ag Presence in Breast Cancer Specimen,oncology,,,,Categorical; positive or negative
+85339-0,Progesterone Receptor Ag Presence in Breast Cancer Specimen,oncology,,,,Categorical; positive or negative
+10480-2,Estrogen+Progesterone Receptor Ag Presence in Tissue by Immune Stain,oncology,,,,Categorical; positive or negative
+417181009,Estrogen+Progesterone Receptor Ag Presence in Tissue by Immune Stain,oncology,,,,SNOMED code variant; same as 10480-2
+6075-6,Cladosporium Herbarum IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6082-2,Codfish IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6085-5,Common Ragweed IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6095-4,American House Dust Mite IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6106-9,Egg White IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6158-0,Latex IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6189-5,White Oak IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6206-7,Peanut IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6246-3,Shrimp IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6248-9,Soybean IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6273-7,Walnut IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6276-0,Wheat IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6833-8,Cat Dander IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+6844-5,Honey Bee IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+7258-7,Cow Milk IgE Ab in Serum,allergy,0,0.35,kU/L,Class 1+ >0.35
+5767-9,Appearance of Urine,urinalysis,,,{nominal},Categorical; clear is normal
+5778-6,Color of Urine,urinalysis,,,{nominal},Categorical; pale yellow normal
+32167-9,Clarity of Urine,urinalysis,,,{nominal},Categorical
+5770-3,Bilirubin Total Presence in Urine by Test Strip,urinalysis,,,{nominal},Categorical; negative is normal
+20505-4,Bilirubin Total in Urine by Test Strip,urinalysis,0,0.2,mg/dL,Bilirubinuria suggests liver disease
+5794-3,Hemoglobin Presence in Urine by Test Strip,urinalysis,,,{nominal},Categorical; negative is normal
+5797-6,Ketones in Urine by Test Strip,urinalysis,0,5,mg/dL,Elevated in DKA or starvation
+2514-8,Ketones Presence in Urine by Test Strip,urinalysis,,,{nominal},Categorical
+5799-2,Leukocyte Esterase Presence in Urine by Test Strip,urinalysis,,,{nominal},Positive suggests UTI
+5802-4,Nitrite Presence in Urine by Test Strip,urinalysis,,,{nominal},Positive suggests bacterial infection
+5803-2,pH of Urine by Test Strip,urinalysis,4.5,8,pH,Normal range; highly variable
+5811-5,Specific Gravity of Urine by Test Strip,urinalysis,,,{nominal},Categorical in Synthea
+20454-5,Protein Presence in Urine by Test Strip,urinalysis,,,{nominal},Categorical; trace or negative is normal
+25428-4,Glucose Presence in Urine by Test Strip,urinalysis,,,{nominal},Categorical; negative is normal
+92130-4,Rhinovirus RNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical; detected/not detected
+92131-2,Respiratory Syncytial Virus RNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical
+92134-6,Human Metapneumovirus RNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical
+92138-7,Parainfluenza Virus 3 RNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical
+92139-5,Parainfluenza Virus 2 RNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical
+92140-3,Parainfluenza Virus 1 RNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical
+92141-1,Influenza Virus B RNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical
+92142-9,Influenza Virus A RNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical
+80382-5,Influenza Virus A Ag Presence in Nasopharynx by Rapid Immunoassay,respiratory-pathogen,,,,Categorical
+80383-3,Influenza Virus B Ag Presence in Nasopharynx by Rapid Immunoassay,respiratory-pathogen,,,,Categorical
+94040-3,Adenovirus DNA Presence in Respiratory Specimen,respiratory-pathogen,,,,Categorical
+94531-1,SARS-CoV-2 RNA Panel Respiratory,respiratory-pathogen,,,,Categorical; detected/not detected
+88262-1,Gram Positive Blood Culture Panel by Probe,respiratory-pathogen,,,,Categorical; positive/negative
+72166-2,Tobacco Smoking Status NHIS,social-history,,,,Categorical; current/former/never
+57905-2,Hemoglobin Gastrointestinal Presence in Stool by Immunologic Method,gastrointestinal,,,ng/mL,Categorical/semi-quantitative; fecal occult blood
+74006-8,Weight Difference Pre Dialysis - Post Dialysis,renal,,,kg,Clinical context dependent; dialysis patients only
+65750-2,Drugs of Abuse 5 Panel Urine by Screen Method,toxicology,,,n/a,Categorical panel result
+88020-3,Functional Capacity NYHA,cardiac,,,,Categorical I-IV classification
+88021-1,Objective Assessment of Cardiovascular Disease NYHA,cardiac,,,,Categorical A-D classification
+72514-3,Pain Severity 0-10 Verbal Numeric Rating Score,survey,0,3,{score},Mild 1-3; Moderate 4-6; Severe 7-10
+44261-6,Patient Health Questionnaire 9 Item PHQ-9 Total Score,survey,0,4,{score},Minimal 0-4; Mild 5-9; Moderate 10-14; Severe 20+
+QOLS,Quality of Life Score,survey,70,112,{score},Burckhardt QOLS; higher is better; max 112

@@ -1,0 +1,39 @@
+name: 'clinical_analytics'
+version: '1.0.0'
+
+profile: 'clinical_analytics'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+seeds:
+  clinical_analytics:
+    biomarker_reference_ranges:
+      +column_types:
+        loinc_code: varchar(50)
+        observation_name: varchar(255)
+        category: varchar(50)
+        range_low: float
+        range_high: float
+        unit: varchar(50)
+        notes: varchar(500)
+
+models:
+  clinical_analytics:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts

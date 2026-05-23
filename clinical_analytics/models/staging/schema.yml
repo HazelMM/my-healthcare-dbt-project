@@ -1,0 +1,226 @@
+version: 2
+
+models:
+  - name: stg_patients
+    description: "Cleaned and scoped patient demographic records. One row per patient."
+    columns:
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: "Patient first name."
+        data_tests:
+          - not_null
+
+      - name: last_name
+        description: "Patient last name."
+        data_tests:
+          - not_null
+
+      - name: birth_date
+        description: "Patient date of birth."
+        data_tests:
+          - not_null
+
+      - name: death_date
+        description: "Date of death. NULL if the patient is alive."
+
+      - name: is_deceased
+        description: "{{ doc('is_deceased') }}"
+        data_tests:
+          - not_null
+
+      - name: gender
+        description: "Patient biological sex at birth."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['M', 'F']
+
+      - name: race
+        description: "Patient self-reported race."
+
+      - name: ethnicity
+        description: "Patient self-reported ethnicity."
+
+      - name: marital_status
+        description: "Patient marital status at time of record."
+
+      - name: birthplace
+        description: "City and country of birth."
+
+      - name: city
+        description: "City of patient's current address."
+
+      - name: county
+        description: "County of patient's current address."
+
+      - name: state
+        description: "State of patient's current address."
+
+  - name: stg_conditions
+    description: "Parsed and cleaned longitudinal condition episode records. One row per condition episode per patient."
+    columns:
+      - name: condition_id
+        description: "Surrogate primary key hashed from patient_id, encounter_id, snomed_concept_code, and condition_start_date."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: encounter_id
+        description: "Foreign key to the encounter at which the condition was recorded."
+        data_tests:
+          - not_null
+
+      - name: snomed_concept_code
+        description: "{{ doc('snomed_concept_code') }}"
+        data_tests:
+          - not_null
+
+      - name: condition_name
+        description: "{{ doc('condition_name') }}"
+        data_tests:
+          - not_null
+
+      - name: clinical_semantic_tag
+        description: "{{ doc('clinical_semantic_tag') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['disorder', 'finding', 'situation', 'observable entity', 'event', 'person']
+              config:
+                severity: warn
+
+      - name: condition_start_date
+        description: "Date the condition was first recorded."
+        data_tests:
+          - not_null
+
+      - name: condition_end_date
+        description: "Date the condition resolved. NULL if the condition is ongoing."
+
+      - name: is_active_condition
+        description: "{{ doc('is_active_condition') }}"
+        data_tests:
+          - not_null
+
+  - name: stg_encounters
+    description: "Cleaned clinical encounter records. One row per encounter per patient."
+    columns:
+      - name: encounter_id
+        description: "{{ doc('encounter_id') }}"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: encounter_class
+        description: "Class of the encounter (e.g. ambulatory, inpatient, emergency)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['ambulatory', 'emergency', 'inpatient', 'outpatient', 'urgentcare', 'wellness']
+              config:
+                severity: warn
+
+      - name: encounter_code
+        description: "SNOMED-CT code identifying the encounter type."
+        data_tests:
+          - not_null
+
+      - name: encounter_type_description
+        description: "{{ doc('encounter_type_description') }}"
+        data_tests:
+          - not_null
+
+      - name: encounter_start_datetime
+        description: "Datetime the encounter began."
+        data_tests:
+          - not_null
+
+      - name: encounter_end_datetime
+        description: "Datetime the encounter ended. NULL if the encounter has not yet been completed."
+
+      - name: is_completed
+        description: "{{ doc('is_completed') }}"
+        data_tests:
+          - not_null
+
+      - name: reason_code
+        description: "SNOMED-CT code for the primary clinical reason for the encounter. NULL if no reason was recorded."
+
+      - name: encounter_reason_description
+        description: "Human-readable description of the primary reason for the encounter. NULL if no reason was recorded."
+
+  - name: stg_observations
+    description: "Cleaned longitudinal observation records including lab results, biomarker measurements, and vital signs. One row per observation event per patient."
+    columns:
+      - name: observation_id
+        description: "{{ doc('observation_id') }}"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: encounter_id
+        description: "Foreign key to the encounter at which the observation was recorded. NULL for observations not linked to a specific encounter (e.g. social history, survey responses)."
+
+      - name: observation_date
+        description: "Date the observation was recorded."
+        data_tests:
+          - not_null
+
+      - name: observation_category
+        description: "High-level category of the observation (e.g. laboratory, vital-signs, survey)."
+
+      - name: observation_code
+        description: "{{ doc('observation_code') }}"
+        data_tests:
+          - not_null
+
+      - name: observation_name
+        description: "{{ doc('observation_name') }}"
+        data_tests:
+          - not_null
+
+      - name: raw_value
+        description: "{{ doc('raw_value') }}"
+
+      - name: observation_value_numeric
+        description: "{{ doc('observation_value_numeric') }}"
+
+      - name: observation_unit
+        description: "Unit of measure for the observation value (e.g. %, mg/dL, mmHg)."
+
+      - name: value_type
+        description: "Data type of the raw value field (e.g. numeric, text)."

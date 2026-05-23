@@ -1,0 +1,180 @@
+version: 2
+
+models:
+  - name: dim_patient_disorder_episodes
+    description: "One row per patient per condition episode for all patients in the disorder-tagged cohort. Joins patient demographics and cumulative encounter utilization onto each condition episode."
+    columns:
+      - name: condition_id
+        description: "Surrogate primary key for the condition episode, inherited from int_condition_disorders."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: gender
+        description: "Patient gender as recorded in the source."
+
+      - name: race
+        description: "Patient race as recorded in the source."
+
+      - name: ethnicity
+        description: "Patient ethnicity as recorded in the source."
+
+      - name: is_deceased
+        description: "{{ doc('is_deceased') }}"
+
+      - name: death_date
+        description: "Date of death if the patient is deceased. NULL for living patients."
+
+      - name: total_encounters
+        description: "{{ doc('total_encounters') }}"
+
+      - name: ambulatory_encounter_count
+        description: "{{ doc('ambulatory_encounter_count') }}"
+
+      - name: wellness_encounter_count
+        description: "{{ doc('wellness_encounter_count') }}"
+
+      - name: emergency_encounter_count
+        description: "{{ doc('emergency_encounter_count') }}"
+
+      - name: inpatient_encounter_count
+        description: "{{ doc('inpatient_encounter_count') }}"
+
+      - name: condition_name
+        description: "{{ doc('condition_name') }}"
+        data_tests:
+          - not_null
+
+      - name: snomed_concept_code
+        description: "{{ doc('snomed_concept_code') }}"
+        data_tests:
+          - not_null
+
+      - name: clinical_semantic_tag
+        description: "{{ doc('clinical_semantic_tag') }}"
+        data_tests:
+          - not_null
+
+      - name: condition_start_date
+        description: "Date the condition episode was first recorded."
+        data_tests:
+          - not_null
+
+      - name: condition_end_date
+        description: "Date the condition episode resolved. NULL if still active."
+
+      - name: is_active_condition
+        description: "{{ doc('is_active_condition') }}"
+        data_tests:
+          - not_null
+
+      - name: condition_duration_days
+        description: "{{ doc('condition_duration_days') }}"
+        data_tests:
+          - not_null
+
+      - name: condition_onset_year
+        description: "{{ doc('condition_onset_year') }}"
+        data_tests:
+          - not_null
+
+  - name: patient_longitudinal_observation_spine
+    description: "Monthly date spine per patient anchored to first disorder onset and running through death or current date. Left joined to biomarker observation events. One row per patient per spine_month per observation. Spine months with no observations produce a single row with NULL observation columns."
+    columns:
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: spine_month
+        description: "{{ doc('spine_month') }}"
+        data_tests:
+          - not_null
+
+      - name: gender
+        description: "Patient gender as recorded in the source."
+
+      - name: race
+        description: "Patient race as recorded in the source."
+
+      - name: ethnicity
+        description: "Patient ethnicity as recorded in the source."
+
+      - name: age_at_month
+        description: "{{ doc('age_at_month') }}"
+
+      - name: is_deceased
+        description: "{{ doc('is_deceased') }}"
+
+      - name: death_date
+        description: "Date of death if the patient is deceased. NULL for living patients."
+
+      - name: total_encounters
+        description: "{{ doc('total_encounters') }}"
+
+      - name: ambulatory_encounter_count
+        description: "{{ doc('ambulatory_encounter_count') }}"
+
+      - name: wellness_encounter_count
+        description: "{{ doc('wellness_encounter_count') }}"
+
+      - name: emergency_encounter_count
+        description: "{{ doc('emergency_encounter_count') }}"
+
+      - name: inpatient_encounter_count
+        description: "{{ doc('inpatient_encounter_count') }}"
+
+      - name: observation_date
+        description: "Actual date the observation was recorded. NULL for spine months with no matching observation."
+
+      - name: observation_code
+        description: "{{ doc('observation_code') }}"
+
+      - name: observation_name
+        description: "{{ doc('observation_name') }}"
+
+      - name: observation_value_numeric
+        description: "{{ doc('observation_value_numeric') }}"
+
+      - name: observation_unit
+        description: "Unit of measure for the observation value. '{nominal}' for categorical observations. NULL for spine months with no observation."
+
+      - name: range_low
+        description: "Lower bound of the normal reference range from biomarker_reference_ranges. NULL for spine months with no observation."
+
+      - name: range_high
+        description: "Upper bound of the normal reference range from biomarker_reference_ranges. NULL for spine months with no observation."
+
+      - name: distance_from_normal
+        description: "{{ doc('distance_from_normal') }}"
+
+      - name: range_status
+        description: "{{ doc('range_status') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['normal', 'above_range', 'below_range']
+              config:
+                severity: warn
+
+      - name: trend_status
+        description: "{{ doc('trend_status') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['normalized', 'worsening', 'improving', 'stable']
+              config:
+                severity: warn

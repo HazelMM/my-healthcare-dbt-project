@@ -1,0 +1,338 @@
+version: 2
+
+models:
+  - name: int_patient_cohort
+    description: "Defines the patient population for all downstream marts. One row per patient who has at least one disorder-tagged condition in int_condition_disorders."
+    columns:
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+  - name: int_condition_disorders
+    description: "Condition episodes filtered to SNOMED disorder semantic tag, enriched with duration and onset year. One row per disorder episode per patient."
+    columns:
+      - name: condition_id
+        description: "Surrogate primary key inherited from stg_conditions, hashed from patient_id, encounter_id, snomed_concept_code, and condition_start_date."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: encounter_id
+        description: "{{ doc('encounter_id') }}"
+        data_tests:
+          - not_null
+
+      - name: snomed_concept_code
+        description: "{{ doc('snomed_concept_code') }}"
+        data_tests:
+          - not_null
+
+      - name: condition_name
+        description: "{{ doc('condition_name') }}"
+        data_tests:
+          - not_null
+
+      - name: clinical_semantic_tag
+        description: "{{ doc('clinical_semantic_tag') }}"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['disorder']
+
+      - name: condition_start_date
+        description: "Date the condition was first recorded."
+        data_tests:
+          - not_null
+
+      - name: condition_end_date
+        description: "Date the condition resolved. NULL if the condition is ongoing."
+
+      - name: is_active_condition
+        description: "{{ doc('is_active_condition') }}"
+        data_tests:
+          - not_null
+
+      - name: condition_duration_days
+        description: "{{ doc('condition_duration_days') }}"
+        data_tests:
+          - not_null
+
+      - name: condition_onset_year
+        description: "{{ doc('condition_onset_year') }}"
+        data_tests:
+          - not_null
+
+  - name: int_encounter_enriched
+    description: "Encounter records enriched with derived duration, month, and inter-encounter gap metrics. One row per encounter per patient."
+    columns:
+      - name: encounter_id
+        description: "{{ doc('encounter_id') }}"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: encounter_class
+        description: "Class of the encounter (e.g. ambulatory, inpatient, emergency)."
+        data_tests:
+          - not_null
+
+      - name: encounter_code
+        description: "SNOMED-CT code identifying the encounter type."
+        data_tests:
+          - not_null
+
+      - name: encounter_type_description
+        description: "{{ doc('encounter_type_description') }}"
+        data_tests:
+          - not_null
+
+      - name: encounter_start_datetime
+        description: "Datetime the encounter began."
+        data_tests:
+          - not_null
+
+      - name: encounter_end_datetime
+        description: "Datetime the encounter ended. NULL if the encounter has not yet been completed."
+
+      - name: is_completed
+        description: "{{ doc('is_completed') }}"
+        data_tests:
+          - not_null
+
+      - name: reason_code
+        description: "SNOMED-CT code for the primary clinical reason for the encounter. NULL if no reason was recorded."
+
+      - name: encounter_reason_description
+        description: "Human-readable description of the primary reason for the encounter. NULL if no reason was recorded."
+
+      - name: encounter_duration_minutes
+        description: "{{ doc('encounter_duration_minutes') }}"
+
+      - name: encounter_month
+        description: "{{ doc('encounter_month') }}"
+        data_tests:
+          - not_null
+
+      - name: days_since_last_encounter
+        description: "{{ doc('days_since_last_encounter') }}"
+
+  - name: int_observation_clinical
+    description: "Observation records joined to biomarker_reference_ranges, enriched with month, value trend, and range status indicators. One row per observation event per patient. Limited to observations with a matching LOINC code in the reference seed."
+    columns:
+      - name: observation_id
+        description: "{{ doc('observation_id') }}"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: encounter_id
+        description: "Foreign key to the encounter at which the observation was recorded. NULL for observations not linked to a specific encounter."
+
+      - name: observation_date
+        description: "Date the observation was recorded."
+        data_tests:
+          - not_null
+
+      - name: observation_category
+        description: "High-level category of the observation (e.g. laboratory, vital-signs, survey)."
+
+      - name: observation_code
+        description: "{{ doc('observation_code') }}"
+        data_tests:
+          - not_null
+
+      - name: observation_name
+        description: "{{ doc('observation_name') }}"
+        data_tests:
+          - not_null
+
+      - name: raw_value
+        description: "{{ doc('raw_value') }}"
+
+      - name: observation_value_numeric
+        description: "{{ doc('observation_value_numeric') }}"
+
+      - name: observation_unit
+        description: "Unit of measure for the observation value. '{nominal}' for categorical observations."
+
+      - name: value_type
+        description: "Data type of the raw value field (e.g. numeric, text)."
+
+      - name: range_low
+        description: "Lower bound of the normal reference range from biomarker_reference_ranges. NULL for categorical observations or those without a defined lower threshold."
+
+      - name: range_high
+        description: "Upper bound of the normal reference range from biomarker_reference_ranges. NULL for categorical observations or those without a defined upper threshold."
+
+      - name: reference_notes
+        description: "{{ doc('reference_notes') }}"
+
+      - name: observation_month
+        description: "{{ doc('observation_month') }}"
+        data_tests:
+          - not_null
+
+      - name: value_delta
+        description: "{{ doc('value_delta') }}"
+
+      - name: distance_from_normal
+        description: "{{ doc('distance_from_normal') }}"
+
+      - name: range_status
+        description: "{{ doc('range_status') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['normal', 'above_range', 'below_range']
+              config:
+                severity: warn
+
+  - name: int_observation_trend
+    description: "Observation records from int_observations_clinical enriched with a lag-derived trend_status. Single responsibility: compute the prior distance_from_normal via LAG window and classify trajectory. One row per observation event per patient."
+    columns:
+      - name: observation_id
+        description: "{{ doc('observation_id') }}"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: observation_date
+        description: "Date the observation was recorded."
+        data_tests:
+          - not_null
+
+      - name: observation_code
+        description: "{{ doc('observation_code') }}"
+        data_tests:
+          - not_null
+
+      - name: distance_from_normal
+        description: "{{ doc('distance_from_normal') }}"
+
+      - name: trend_status
+        description: "{{ doc('trend_status') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['normalized', 'worsening', 'improving', 'stable']
+              config:
+                severity: warn
+
+  - name: int_patient_encounter_summary
+    description: "Cumulative encounter counts per patient aggregated from int_encounters_enriched. One row per patient. Static as of last refresh — repeats on every row in the mart like patient demographics."
+    columns:
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: total_encounters
+        description: "{{ doc('total_encounters') }}"
+        data_tests:
+          - not_null
+
+      - name: ambulatory_encounter_count
+        description: "{{ doc('ambulatory_encounter_count') }}"
+        data_tests:
+          - not_null
+
+      - name: wellness_encounter_count
+        description: "{{ doc('wellness_encounter_count') }}"
+        data_tests:
+          - not_null
+
+      - name: emergency_encounter_count
+        description: "{{ doc('emergency_encounter_count') }}"
+        data_tests:
+          - not_null
+
+      - name: inpatient_encounter_count
+        description: "{{ doc('inpatient_encounter_count') }}"
+        data_tests:
+          - not_null
+
+      - name: last_encounter_date
+        description: "{{ doc('last_encounter_date') }}"
+        data_tests:
+          - not_null
+
+  - name: int_patient_condition_summary
+    description: "One row per patient summarising their full disorder history aggregated from int_conditions_disorders. Used as a patient-level feature set for mart models."
+    columns:
+      - name: patient_id
+        description: "{{ doc('patient_id') }}"
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_patients')
+                field: patient_id
+
+      - name: total_disorder_count
+        description: "{{ doc('total_disorder_count') }}"
+        data_tests:
+          - not_null
+
+      - name: active_disorder_count
+        description: "{{ doc('active_disorder_count') }}"
+        data_tests:
+          - not_null
+
+      - name: first_disorder_date
+        description: "{{ doc('first_disorder_date') }}"
+        data_tests:
+          - not_null
+
+      - name: most_recent_disorder_date
+        description: "{{ doc('most_recent_disorder_date') }}"
+        data_tests:
+          - not_null

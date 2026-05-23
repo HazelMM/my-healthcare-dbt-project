@@ -58,6 +58,21 @@ Clinical interaction events representing healthcare utilization and patient touc
 
 ---
 
+## Biomarker Abnormality Business Rules
+
+The `stg_observations` model flags clinically abnormal biomarker readings via the `has_abnormal_biomarker` column. Thresholds are applied by observation code and are based on standard clinical reference ranges for the chronic disease cohorts tracked in this project.
+
+| Observation | Code | Threshold | Clinical Basis |
+|---|---|---|---|
+| HbA1c | `4548-4` | > 6.5% | ADA diabetes diagnosis threshold |
+| Fasting Glucose | `2339-0` | >= 126 mg/dL | ADA diabetes diagnosis threshold |
+| eGFR | `33914-3` | < 60 mL/min/1.73m² | KDIGO CKD staging threshold |
+| Systolic Blood Pressure | `8480-6` | >= 130 mmHg | AHA Stage 1 hypertension threshold |
+
+These rules are isolated in the staging layer and should not be re-implemented in intermediate or mart models. Downstream models should reference `has_abnormal_biomarker` directly.
+
+---
+
 ## Planned Semantic Models
 
 ### Patient Health Profile

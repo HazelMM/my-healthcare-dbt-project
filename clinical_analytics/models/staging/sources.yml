@@ -1,0 +1,135 @@
+version: 2
+
+sources:
+  - name: synthea
+    description: "Synthea synthetic EHR data — longitudinal patient records loaded into Snowflake."
+    database: SYNTHEA_HEALTHCARE
+    schema: RAW
+
+    tables:
+      - name: patients
+        description: "One row per patient. Contains demographic and baseline identity information."
+        columns:
+          - name: id
+            description: "Unique patient identifier (patient_id in downstream models)."
+            data_tests:
+              - unique
+              - not_null
+          - name: birthdate
+            description: "Patient date of birth."
+          - name: deathdate
+            description: "Date of death, NULL if patient is alive."
+          - name: race
+            description: "Patient self-reported race."
+          - name: ethnicity
+            description: "Patient self-reported ethnicity."
+          - name: gender
+            description: "Patient biological sex at birth."
+          - name: address
+            description: "Street address."
+          - name: city
+          - name: state
+          - name: zip
+          - name: lat
+            description: "Geographic latitude of patient address."
+          - name: lon
+            description: "Geographic longitude of patient address."
+          - name: healthcare_expenses
+            description: "Cumulative out-of-pocket healthcare expenses in USD."
+          - name: healthcare_coverage
+            description: "Cumulative insurance coverage amount in USD."
+          - name: income
+            description: "Annual household income in USD."
+
+      - name: conditions
+        description: "One row per condition episode. Longitudinal SNOMED-CT diagnosis history per patient."
+        columns:
+          - name: start_date
+            description: "Date the condition was first recorded."
+          - name: stop_date
+            description: "Date the condition resolved; NULL if ongoing."
+          - name: patient
+            description: "Foreign key to patients.id."
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('synthea', 'patients')
+                    field: id
+          - name: encounter
+            description: "Foreign key to encounters.id — the encounter at which the condition was recorded."
+          - name: code
+            description: "SNOMED-CT numeric concept code."
+          - name: description
+            description: "Raw SNOMED-CT concept label, may include semantic tag in parentheses (e.g. 'Hypoxemia (disorder)')."
+
+      - name: observations
+        description: "One row per observation event. Laboratory results, biomarker measurements, and vital signs over time."
+        columns:
+          - name: date
+            description: "Date the observation was recorded."
+          - name: patient
+            description: "Foreign key to patients.id."
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('synthea', 'patients')
+                    field: id
+          - name: encounter
+            description: "Foreign key to encounters.id."
+          - name: category
+            description: "Observation category (e.g. laboratory, vital-signs)."
+          - name: code
+            description: "LOINC or SNOMED code identifying the observation type."
+          - name: description
+            description: "Human-readable observation label (mapped to observation_name in staging)."
+          - name: value
+            description: "Raw observation result value; numeric results parsed against clinical reference ranges in staging."
+          - name: units
+            description: "Unit of measure for the observation value."
+          - name: type
+            description: "Data type of the value field (e.g. numeric, text)."
+
+      - name: encounters
+        description: "One row per clinical encounter. Records healthcare utilization events and patient touchpoints."
+        columns:
+          - name: id
+            description: "Unique encounter identifier (encounter_id in downstream models)."
+            data_tests:
+              - unique
+              - not_null
+          - name: start_time
+            description: "Encounter start datetime."
+          - name: stop
+            description: "Encounter end datetime."
+          - name: patient
+            description: "Foreign key to patients.id."
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('synthea', 'patients')
+                    field: id
+          - name: organization
+            description: "Healthcare organization identifier."
+          - name: provider
+            description: "Provider identifier."
+          - name: payer
+            description: "Payer/insurance identifier."
+          - name: encounterclass
+            description: "Class of encounter (e.g. ambulatory, inpatient, emergency) — mapped to encounter_class_description in staging."
+          - name: code
+            description: "SNOMED code for the encounter type."
+          - name: description
+            description: "Encounter type label."
+          - name: base_encounter_cost
+            description: "Base cost of the encounter before payer coverage in USD."
+          - name: total_claim_cost
+            description: "Total billed amount in USD."
+          - name: payer_coverage
+            description: "Amount covered by the payer in USD."
+          - name: reasoncode
+            description: "SNOMED code for the primary reason for the encounter."
+          - name: reasondescription
+            description: "Human-readable reason for the encounter."
