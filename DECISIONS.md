@@ -25,16 +25,6 @@ Consumers who need "encounters in a given period" can calculate that by filterin
 
 ---
 
-## Comorbidity Is Not Pre-Aggregated
-
-An earlier design included hardcoded comorbidity flags (`has_diabetes`, `has_hypertension`) and an `active_disorder_count` column. Both were dropped.
-
-Hardcoded flags don't scale — Synthea contains 55+ distinct disorder conditions. Maintaining a flag per condition is brittle and reflects the engineer's assumptions about which conditions matter, not the data.
-
-`active_disorder_count` was dropped for a more subtle reason: because the spine is a pre-materialized table, any aggregation baked in reflects the state at dbt run time, not at query time. A user filtering to a historical date range would see an `active_disorder_count` that doesn't correspond to their selected period. Instead, `is_active_condition` is carried as a row-level boolean derived from `condition_start_date` and `condition_end_date`, and consumers compute comorbidity in their own query context against their own date range.
-
----
-
 ## Biomarker Reference Ranges Are a Seed File, Not Hardcoded Logic
 
 Observation values are evaluated against published clinical reference ranges sourced from LOINC standards and Synthea's documented observation codes. These ranges live in `seeds/biomarker_reference_ranges.csv` rather than being hardcoded in SQL.
@@ -63,7 +53,13 @@ The semantic tag is extracted from the SNOMED description field using a regex pa
 
 `trend_direction` (`improving` / `worsening` / `stable`) reflects the direction of movement of a lab value relative to the patient's previous reading of the same observation code — not whether the value is clinically good or bad.
 
-This is intentional. Whether a rising value is good or bad depends on the condition and the clinical context. A rising hemoglobin is improving for an anemic patient. A rising HbA1c is worsening for a diabetic one. The model does not make that judgment — `range_status` (derived from the biomarker seed) provides the reference point, and clinical interpretation is left to the consumer.
+This is intentional. Whether a rising value is good or bad depends on the condition and the clinical context. A rising hemoglobin is improving for an anemic patient. A rising HbA1c is worsening for a diabetic one. The model does not make that judgment — `range_status` (derived from the biomarker seed) provides the reference point, and clinical interpretation is left to the consumer. 
+
+---
+
+## Biomarker Seed File
+
+The biomarker seed file serves as an allowlist. The join between observations and the seed is intentionally inner, meaning only observations with a matching LOINC code in the seed are carried into the intermediate layer. This eliminates non-clinical observations that are miscategorized in the source without requiring brittle code-level exclusion filters. *Note: Reference ranges were compiled from LOINC standards with the assistance of AI (Claude, Anthropic) and cross-referenced against Synthea's documented observation codes. Values should be treated as general published reference points, not as institution-specific or clinically validated thresholds. 
 
 ---
 
