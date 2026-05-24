@@ -8,6 +8,8 @@ Using dbt and Snowflake, the project models patient health trajectories across c
 
 Rather than treating healthcare data as isolated reporting tables, this project emphasizes longitudinal patient state modeling, semantic normalization, and clinically meaningful context generation.
 
+[Synthea by MITRE](https://synthea.mitre.org/downloads)
+
 ---
 
 ## Core Objectives
