@@ -1,0 +1,56 @@
+snomed_concept_code,condition_name,clinical_state,clinical_category,notes
+234466008,Acquired coagulation disorder,chronic,hematologic,Ongoing clotting factor deficiency or dysfunction
+75498004,Acute bacterial sinusitis,acute,infectious,Bacterial infection of sinuses; typically resolves with treatment
+10509002,Acute bronchitis,acute,respiratory,Short-term bronchial inflammation; usually viral
+132281000119108,Acute deep venous thrombosis,acute,vascular,Blood clot in deep vein; requires immediate treatment
+706870000,Acute pulmonary embolism,acute,vascular,Blockage in pulmonary artery; life-threatening
+67782005,Acute respiratory distress syndrome,acute,respiratory,Severe lung injury; typically ICU-level care
+65710008,Acute respiratory failure,acute,respiratory,Sudden inability to maintain adequate gas exchange
+195662009,Acute viral pharyngitis,acute,infectious,Viral sore throat; self-limiting
+26929004,Alzheimer's disease,chronic,neurological,Progressive neurodegenerative disease; no cure
+271737000,Anemia,chronic,hematologic,Reduced red blood cell count or hemoglobin; may be acute or chronic depending on cause
+92691004,Carcinoma in situ of prostate,chronic,oncologic,Localized malignancy; not yet invasive
+128188000,Cerebral palsy,chronic,neurological,Permanent movement disorder from early brain damage
+88805009,Chronic congestive heart failure,chronic,cardiovascular,Progressive inability of heart to pump adequately
+431855005,Chronic kidney disease stage 1,chronic,renal,Mild kidney damage with normal or high GFR
+431856006,Chronic kidney disease stage 2,chronic,renal,Mild reduction in GFR with kidney damage markers
+185086009,Chronic obstructive bronchitis,chronic,respiratory,Persistent airway inflammation; subset of COPD
+40055000,Chronic sinusitis,chronic,respiratory,Prolonged sinus inflammation lasting 12+ weeks
+127013003,Diabetic renal disease,chronic,renal,Kidney damage secondary to diabetes; progressive
+422034002,Diabetic retinopathy associated with type II diabetes mellitus,chronic,ophthalmologic,Retinal damage from chronic hyperglycemia
+157265008,Dislocation of hip joint,acute,musculoskeletal,Traumatic joint displacement; typically resolves with reduction
+84757009,Epilepsy,chronic,neurological,Recurrent unprovoked seizures; long-term management required
+230265002,Familial Alzheimer's disease of early onset,chronic,neurological,Genetic early-onset neurodegenerative disease
+203082005,Fibromyalgia,chronic,musculoskeletal,Widespread musculoskeletal pain with fatigue; no cure
+235595009,Gastroesophageal reflux disease,chronic,gastrointestinal,Chronic acid reflux; manageable but persistent
+80394007,Hyperglycemia,acute,metabolic,Elevated blood glucose; may be episodic or indicator of chronic disease
+302870006,Hypertriglyceridemia,chronic,metabolic,Elevated triglycerides; cardiovascular risk factor
+389087006,Hypoxemia,acute,respiratory,Low blood oxygen; symptom of underlying condition
+86175003,Injury of heart,acute,cardiovascular,Traumatic cardiac injury; acute event
+40095003,Injury of kidney,acute,renal,Traumatic renal injury; acute event
+110359009,Intellectual disability,chronic,neurological,Permanent cognitive impairment; present from development
+97331000119101,Macular edema and retinopathy due to type 2 diabetes mellitus,chronic,ophthalmologic,Advanced diabetic eye disease with fluid accumulation
+254837009,Malignant neoplasm of breast,chronic,oncologic,Invasive breast cancer; requires ongoing treatment
+237602007,Metabolic syndrome X,chronic,metabolic,Cluster of conditions increasing cardiovascular risk
+314994000,Metastasis from malignant tumor of prostate,chronic,oncologic,Advanced prostate cancer with distant spread
+90781000119102,Microalbuminuria due to type 2 diabetes mellitus,chronic,renal,Early marker of diabetic kidney disease
+368581000119106,Neuropathy due to type 2 diabetes mellitus,chronic,neurological,Nerve damage from chronic hyperglycemia
+424132000,Non-small cell carcinoma of lung TNM stage 1,chronic,oncologic,Early stage lung cancer; localized
+425048006,Non-small cell carcinoma of lung TNM stage 2,chronic,oncologic,Locally advanced lung cancer
+254637007,Non-small cell lung cancer,chronic,oncologic,Broad classification of non-small cell lung malignancy
+1551000119108,Nonproliferative diabetic retinopathy due to type 2 diabetes mellitus,chronic,ophthalmologic,Early diabetic retinal damage without new vessel growth
+5602001,Opioid abuse,chronic,behavioral,Substance use disorder requiring ongoing management
+64859006,Osteoporosis,chronic,musculoskeletal,Reduced bone density; increased fracture risk
+443165006,Pathological fracture due to osteoporosis,acute,musculoskeletal,Fracture from bone fragility; acute event on chronic background
+233604007,Pneumonia,acute,infectious,Lung infection; typically resolves with treatment
+1501000119109,Proliferative diabetic retinopathy due to type II diabetes mellitus,chronic,ophthalmologic,Advanced diabetic retinopathy with abnormal vessel growth
+87433001,Pulmonary emphysema,chronic,respiratory,Permanent alveolar damage; subset of COPD
+91302008,Sepsis,acute,infectious,Life-threatening systemic infection response
+770349000,Sepsis caused by virus,acute,infectious,Viral-origin systemic infection response
+76571007,Septic shock,acute,infectious,Sepsis with critical circulatory failure
+27942005,Shock,acute,cardiovascular,Circulatory failure with inadequate tissue perfusion
+36971009,Sinusitis,acute,infectious,Sinus inflammation; typically short-term
+76916001,Spina bifida occulta,chronic,neurological,Congenital spinal defect; typically asymptomatic
+43878008,Streptococcal sore throat,acute,infectious,Bacterial throat infection; resolves with antibiotics
+427419006,Transformed migraine,chronic,neurological,Chronic daily headache evolved from episodic migraine
+444814009,Viral sinusitis,acute,infectious,Viral sinus inflammation; self-limiting

@@ -44,6 +44,8 @@ joined as (
         cd.condition_name,
         cd.snomed_concept_code,
         cd.clinical_semantic_tag,
+        cd.clinical_state,
+        cd.clinical_category,
         cd.condition_start_date,
         cd.condition_end_date,
         cd.is_active_condition,

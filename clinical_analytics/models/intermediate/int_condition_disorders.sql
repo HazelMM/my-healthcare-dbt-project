@@ -6,28 +6,38 @@ with conditions as (
 
 ),
 
+snomed_state as (
+
+    select * from {{ ref('snomed_clinical_state') }}
+
+),
+
 enriched as (
 
     select
-        condition_id,
-        patient_id,
-        encounter_id,
-        snomed_concept_code,
-        condition_name,
-        clinical_semantic_tag,
-        condition_start_date,
-        condition_end_date,
-        is_active_condition,
+        c.condition_id,
+        c.patient_id,
+        c.encounter_id,
+        c.snomed_concept_code,
+        c.condition_name,
+        c.clinical_semantic_tag,
+        ss.clinical_state,
+        ss.clinical_category,
+        c.condition_start_date,
+        c.condition_end_date,
+        c.is_active_condition,
 
         datediff(
             'day',
-            condition_start_date,
-            coalesce(condition_end_date, current_date())
+            c.condition_start_date,
+            coalesce(c.condition_end_date, current_date())
         )                                               as condition_duration_days,
 
-        year(condition_start_date)                      as condition_onset_year
+        year(c.condition_start_date)                    as condition_onset_year
 
-    from conditions
+    from conditions as c
+    left join snomed_state as ss
+        on c.snomed_concept_code = ss.snomed_concept_code
 
 ),
 
