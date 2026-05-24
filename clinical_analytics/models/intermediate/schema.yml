@@ -55,6 +55,37 @@ models:
               arguments:
                 values: ['disorder']
 
+      - name: clinical_state
+        description: "{{ doc('snomed_clinical_state__clinical_state') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['acute', 'chronic']
+              config:
+                severity: warn
+
+      - name: clinical_category
+        description: "{{ doc('snomed_clinical_state__clinical_category') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - behavioral
+                  - cardiovascular
+                  - gastrointestinal
+                  - hematologic
+                  - infectious
+                  - metabolic
+                  - musculoskeletal
+                  - neurological
+                  - oncologic
+                  - ophthalmologic
+                  - renal
+                  - respiratory
+                  - vascular
+              config:
+                severity: warn
+
       - name: condition_start_date
         description: "Date the condition was first recorded."
         data_tests:

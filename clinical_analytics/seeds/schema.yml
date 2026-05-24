@@ -1,6 +1,57 @@
 version: 2
 
 seeds:
+  - name: snomed_clinical_state
+    description: "{{ doc('snomed_clinical_state') }}"
+    config:
+      tags: ['reference', 'seed']
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - snomed_concept_code
+    columns:
+      - name: snomed_concept_code
+        description: "{{ doc('snomed_clinical_state__snomed_concept_code') }}"
+        tests:
+          - unique
+          - not_null
+
+      - name: condition_name
+        description: "{{ doc('snomed_clinical_state__condition_name') }}"
+        tests:
+          - not_null
+
+      - name: clinical_state
+        description: "{{ doc('snomed_clinical_state__clinical_state') }}"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['acute', 'chronic']
+
+      - name: clinical_category
+        description: "{{ doc('snomed_clinical_state__clinical_category') }}"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - behavioral
+                - cardiovascular
+                - gastrointestinal
+                - hematologic
+                - infectious
+                - metabolic
+                - musculoskeletal
+                - neurological
+                - oncologic
+                - ophthalmologic
+                - renal
+                - respiratory
+                - vascular
+
+      - name: notes
+        description: "Free-text clinical annotation describing the condition's typical clinical course and classification rationale."
+
   - name: biomarker_reference_ranges
     description: "{{ doc('biomarker_reference_ranges') }}"
     config:
