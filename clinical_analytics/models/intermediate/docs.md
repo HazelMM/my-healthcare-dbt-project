@@ -65,19 +65,3 @@ Cumulative count of encounters where `encounter_class = 'inpatient'`. Represents
 {% docs last_encounter_date %}
 Date of the patient's most recent encounter, derived from the maximum `encounter_start_datetime`. Static as of last refresh.
 {% enddocs %}
-
-{% docs total_disorder_count %}
-Total number of disorder-tagged condition episodes recorded for the patient across all time, including both active and resolved conditions.
-{% enddocs %}
-
-{% docs active_disorder_count %}
-Count of condition episodes for the patient currently marked as active (`is_active_condition = true`), meaning no `condition_end_date` has been recorded.
-{% enddocs %}
-
-{% docs first_disorder_date %}
-Date of the patient's earliest recorded disorder-tagged condition onset (`condition_start_date`).
-{% enddocs %}
-
-{% docs most_recent_disorder_date %}
-Date of the patient's most recently recorded disorder-tagged condition onset (`condition_start_date`). Does not reflect the most recently active condition — a resolved condition recorded later may take precedence.
-{% enddocs %}
