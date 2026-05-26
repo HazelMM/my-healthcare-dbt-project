@@ -38,7 +38,7 @@ st.set_page_config(
 )
 
 st.title("🩺 Clinical Analytics Agent")
-st.caption("Synthea synthetic data · demo purposes only · conditions are filtered to SNOMED disorder tag only — primary diabetes and some other conditions are classified as 'finding' in SNOMED and are not included")
+st.caption("Synthea synthetic data · demo purposes only · conditions are filtered to SNOMED disorder tag only")
 
 with st.expander("About this agent", expanded=False):
     st.markdown(
