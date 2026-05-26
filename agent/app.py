@@ -19,6 +19,18 @@ def load_snomed_reference() -> str:
 
 SNOMED_REFERENCE = load_snomed_reference()
 
+
+def load_biomarker_reference() -> str:
+    seed_path = Path(__file__).parent.parent / "clinical_analytics" / "seeds" / "biomarker_reference_ranges.csv"
+    rows = []
+    with open(seed_path, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append(f"  {row['loinc_code']} = {row['observation_name']}")
+    return "\n".join(rows)
+
+BIOMARKER_REFERENCE = load_biomarker_reference()
+
 st.set_page_config(
     page_title="Clinical Analytics Agent",
     page_icon="🩺",
@@ -110,6 +122,13 @@ Columns:
   range_status             VARCHAR   'normal', 'above_range', 'below_range', or null
   trend_status             VARCHAR   'improving', 'worsening', 'stable', 'normalized', or null
 
+OBSERVATION REFERENCE — LOINC CODES:
+The following LOINC codes map to exact observation names in PATIENT_LONGITUDINAL_OBSERVATION_SPINE.
+Always use observation_code for exact observation matching instead of ILIKE wildcards on observation_name.
+ILIKE is only acceptable when the user's question is too vague to map to a specific code.
+
+{BIOMARKER_REFERENCE}
+
 OBSERVATION NAME NOTES:
 - Observation code QOLS has observation_name 'QOLS' and represents Quality of Life Score.
   When users ask about quality of life, search by observation_name = 'QOLS'.
@@ -126,8 +145,12 @@ RULES:
 - Always use fully qualified uppercase table names.
 - Always return full rows of data, never just a COUNT — EXCEPT for questions that explicitly ask for rankings, summaries, or "most common", in those cases return grouped aggregations with counts.
 - If the question asks "how many", return the full matching rows — the app will count them and display the number automatically.
-- Select the columns most relevant to the question. Always include patient_id. For condition-related questions include condition_name, clinical_state, clinical_category, is_active_condition, condition_start_date. For observation questions include observation_name, observation_value_numeric, observation_unit, range_status, trend_status, observation_date.
+- Select the columns most relevant to the question. Always include patient_id — except when the question asks about condition types, categories, or lists rather than patients, in which case return SELECT DISTINCT condition_name, clinical_state, clinical_category without patient_id. For condition-related questions include condition_name, clinical_state, clinical_category, is_active_condition, condition_start_date. For observation questions include observation_name, observation_value_numeric, observation_unit, range_status, trend_status, observation_date.
 - Return ONLY the SQL query. No explanation, no markdown, no backticks, no preamble.
+
+TREND AGGREGATION:
+- For questions about trends "over time" or "sustained" trends, aggregate trend_status counts per patient and return patients where improving_count > worsening_count.
+- Example: count months where trend_status = 'improving' and months where trend_status = 'worsening' per patient, then filter to improving_count > worsening_count.
 
 CLINICAL KNOWLEDGE:
 - Use your clinical knowledge to map condition names to relevant observation names when the user asks about a condition's labs, biomarkers, or trends.
@@ -180,9 +203,10 @@ def run_query(sql: str) -> pd.DataFrame:
 
 examples = [
     "How many patients have both osteoporosis and metabolic syndrome?",
-    "Show patients whose blood pressure normalized",
+    "Show patients whose blood pressure normalized in the summer",
     "Which chronic conditions are most common?",
-    "Give me a list of patients with anemia who also have diabetes",
+    "Give me a list of patients with anemia who also have osteoporosis",
+    "Show me women with quality of life scores below 70",
 ]
 
 st.subheader("Try asking")
