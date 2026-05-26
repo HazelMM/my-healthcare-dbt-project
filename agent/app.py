@@ -207,6 +207,7 @@ examples = [
     "Which chronic conditions are most common?",
     "Give me a list of patients with anemia who also have osteoporosis",
     "Show me women with quality of life scores below 70",
+    "Show me systolic blood pressure readings for patient 00209bf2-8e4d-06d1-82a4-daad02f25829",
 ]
 
 st.subheader("Try asking")
