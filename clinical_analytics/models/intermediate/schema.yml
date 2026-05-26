@@ -1,19 +1,6 @@
 version: 2
 
 models:
-  - name: int_patient_cohort
-    description: "Defines the patient population for all downstream marts. One row per patient who has at least one disorder-tagged condition in int_condition_disorders."
-    columns:
-      - name: patient_id
-        description: "{{ doc('patient_id') }}"
-        data_tests:
-          - unique
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_patients')
-                field: patient_id
-
   - name: int_condition_disorders
     description: "Condition episodes filtered to SNOMED disorder semantic tag, enriched with duration and onset year. One row per disorder episode per patient."
     columns:
@@ -161,6 +148,24 @@ models:
       - name: encounter_reason_description
         description: "Human-readable description of the primary reason for the encounter. NULL if no reason was recorded."
 
+      - name: gender
+        description: "Patient gender, joined from stg_patients."
+
+      - name: race
+        description: "Patient race, joined from stg_patients."
+
+      - name: ethnicity
+        description: "Patient ethnicity, joined from stg_patients."
+
+      - name: birth_date
+        description: "Patient date of birth, joined from stg_patients."
+
+      - name: is_deceased
+        description: "{{ doc('is_deceased') }}"
+
+      - name: death_date
+        description: "Date of patient death. NULL if the patient is alive."
+
       - name: encounter_duration_minutes
         description: "{{ doc('encounter_duration_minutes') }}"
 
@@ -305,6 +310,24 @@ models:
                 to: ref('stg_patients')
                 field: patient_id
 
+      - name: gender
+        description: "Patient gender, passed through from int_encounter_enriched."
+
+      - name: race
+        description: "Patient race, passed through from int_encounter_enriched."
+
+      - name: ethnicity
+        description: "Patient ethnicity, passed through from int_encounter_enriched."
+
+      - name: birth_date
+        description: "Patient date of birth, passed through from int_encounter_enriched."
+
+      - name: is_deceased
+        description: "{{ doc('is_deceased') }}"
+
+      - name: death_date
+        description: "Date of patient death. NULL if the patient is alive."
+
       - name: total_encounters
         description: "{{ doc('total_encounters') }}"
         data_tests:
@@ -332,38 +355,5 @@ models:
 
       - name: last_encounter_date
         description: "{{ doc('last_encounter_date') }}"
-        data_tests:
-          - not_null
-
-  - name: int_patient_condition_summary
-    description: "One row per patient summarising their full disorder history aggregated from int_conditions_disorders. Used as a patient-level feature set for mart models."
-    columns:
-      - name: patient_id
-        description: "{{ doc('patient_id') }}"
-        data_tests:
-          - unique
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_patients')
-                field: patient_id
-
-      - name: total_disorder_count
-        description: "{{ doc('total_disorder_count') }}"
-        data_tests:
-          - not_null
-
-      - name: active_disorder_count
-        description: "{{ doc('active_disorder_count') }}"
-        data_tests:
-          - not_null
-
-      - name: first_disorder_date
-        description: "{{ doc('first_disorder_date') }}"
-        data_tests:
-          - not_null
-
-      - name: most_recent_disorder_date
-        description: "{{ doc('most_recent_disorder_date') }}"
         data_tests:
           - not_null
