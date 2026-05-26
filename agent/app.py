@@ -58,7 +58,7 @@ with st.expander("About this agent", expanded=False):
 
         - Conditions are filtered to `clinical_semantic_tag = 'disorder'` only. This follows SNOMED CT ontology — some conditions that are colloquially considered diseases (such as primary diabetes mellitus) are not tagged 'disorder', and are therefore not present in this dataset. Diabetic complications (retinopathy, neuropathy, renal disease) are classified as disorders and are included.
         - This agent does not generate charts, graphs, or visualizations — results are returned as
-          tabular data only.
+          tabular data only. Time series charts are automatically rendered for single-observation queries only.
         - For questions outside this scope, the agent will return an explanation instead of guessing.
         """
     )
@@ -286,6 +286,27 @@ if ask and question.strip():
             file_name="clinical_query_results.csv",
             mime="text/csv",
         )
+
+        cols = df.columns.tolist()
+        if (
+            "spine_month" in cols
+            and "observation_value_numeric" in cols
+            and "observation_name" in cols
+            and df["observation_name"].nunique() == 1
+            and "patient_id" in cols
+            and df["patient_id"].nunique() == 1
+        ):
+            obs_name = df["observation_name"].iloc[0]
+            obs_unit = df["observation_unit"].iloc[0] if "observation_unit" in cols else ""
+            unit_label = f" ({obs_unit})" if obs_unit else ""
+            st.subheader("Observation trend over time")
+            st.caption(f"{obs_name}{unit_label}")
+            chart_df = (
+                df[["spine_month", "observation_value_numeric"]]
+                .sort_values("spine_month")
+                .set_index("spine_month")
+            )
+            st.line_chart(chart_df)
 
     st.divider()
     st.caption(
