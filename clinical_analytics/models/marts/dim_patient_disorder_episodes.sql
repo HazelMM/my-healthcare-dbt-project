@@ -5,18 +5,6 @@ with condition_disorders as (
 
 ),
 
-cohort as (
-
-    select * from {{ ref('int_patient_cohort') }}
-
-),
-
-patients as (
-
-    select * from {{ ref('stg_patients') }}
-
-),
-
 encounter_summary as (
 
     select * from {{ ref('int_patient_encounter_summary') }}
@@ -29,11 +17,11 @@ joined as (
         cd.patient_id,
         cd.condition_id,
 
-        p.gender,
-        p.race,
-        p.ethnicity,
-        p.is_deceased,
-        p.death_date,
+        es.gender,
+        es.race,
+        es.ethnicity,
+        es.is_deceased,
+        es.death_date,
 
         es.total_encounters,
         es.ambulatory_encounter_count,
@@ -53,10 +41,6 @@ joined as (
         cd.condition_onset_year
 
     from condition_disorders as cd
-    inner join cohort as co
-        on cd.patient_id = co.patient_id
-    left join patients as p
-        on cd.patient_id = p.patient_id
     left join encounter_summary as es
         on cd.patient_id = es.patient_id
 

@@ -9,6 +9,12 @@ patient_summary as (
 
     select
         patient_id,
+        max(gender)                                                                     as gender,
+        max(race)                                                                       as race,
+        max(ethnicity)                                                                  as ethnicity,
+        max(birth_date)                                                                 as birth_date,
+        max(is_deceased)                                                                as is_deceased,
+        max(death_date)                                                                 as death_date,
         count(*)                                                                        as total_encounters,
         count(case when encounter_class = 'ambulatory'  then 1 end)                    as ambulatory_encounter_count,
         count(case when encounter_class = 'wellness'    then 1 end)                    as wellness_encounter_count,

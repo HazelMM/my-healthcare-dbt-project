@@ -1,0 +1,15 @@
+version: 2
+
+exposures:
+  - name: clinical_ai_agent
+    type: application
+    description: >
+      A natural language SQL agent built with Streamlit that allows conversational querying
+      of the clinical analytics mart. Operates on synthetic Synthea data only and is not
+      intended for clinical decision-making or use with real patient data.
+    owner:
+      name: Hazel
+      email: hazel@example.com
+    depends_on:
+      - ref('dim_patient_disorder_episodes')
+      - ref('patient_longitudinal_observation_spine')
