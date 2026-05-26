@@ -1,19 +1,7 @@
 -- grain: one row per patient per spine_month per observation
-with cohort as (
-
-    select * from {{ ref('int_patient_cohort') }}
-
-),
-
-conditions as (
+with conditions as (
 
     select * from {{ ref('int_condition_disorders') }}
-
-),
-
-patients as (
-
-    select * from {{ ref('stg_patients') }}
 
 ),
 
@@ -32,17 +20,15 @@ observations as (
 patient_bounds as (
 
     select
-        co.patient_id,
+        cd.patient_id,
         date_trunc('month', min(cd.condition_start_date))               as spine_start,
-        date_trunc('month', coalesce(p.death_date, current_date()))     as spine_end
+        date_trunc('month', coalesce(es.death_date, current_date()))    as spine_end
 
-    from cohort as co
-    inner join conditions as cd
-        on co.patient_id = cd.patient_id
-    left join patients as p
-        on co.patient_id = p.patient_id
+    from conditions as cd
+    left join encounter_summary as es
+        on cd.patient_id = es.patient_id
 
-    group by co.patient_id, p.death_date
+    group by cd.patient_id, es.death_date
 
 ),
 
@@ -74,12 +60,12 @@ joined as (
         ps.patient_id,
         ps.spine_month,
 
-        p.gender,
-        p.race,
-        p.ethnicity,
-        datediff('year', p.birth_date, ps.spine_month)                 as age_at_month,
-        p.is_deceased,
-        p.death_date,
+        es.gender,
+        es.race,
+        es.ethnicity,
+        datediff('year', es.birth_date, ps.spine_month)                as age_at_month,
+        es.is_deceased,
+        es.death_date,
 
         es.total_encounters,
         es.ambulatory_encounter_count,
@@ -102,8 +88,6 @@ joined as (
     left join observations as obs
         on ps.patient_id = obs.patient_id
         and obs.observation_month = ps.spine_month
-    left join patients as p
-        on ps.patient_id = p.patient_id
     left join encounter_summary as es
         on ps.patient_id = es.patient_id
 

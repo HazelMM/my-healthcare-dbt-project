@@ -5,38 +5,53 @@ with encounters as (
 
 ),
 
+patients as (
+
+    select * from {{ ref('stg_patients') }}
+
+),
+
 enriched as (
 
     select
-        encounter_id,
-        patient_id,
-        encounter_class,
-        encounter_code,
-        encounter_type_description,
-        encounter_start_datetime,
-        encounter_end_datetime,
-        is_completed,
-        reason_code,
-        encounter_reason_description,
+        e.encounter_id,
+        e.patient_id,
+        e.encounter_class,
+        e.encounter_code,
+        e.encounter_type_description,
+        e.encounter_start_datetime,
+        e.encounter_end_datetime,
+        e.is_completed,
+        e.reason_code,
+        e.encounter_reason_description,
+
+        p.gender,
+        p.race,
+        p.ethnicity,
+        p.birth_date,
+        p.is_deceased,
+        p.death_date,
 
         datediff(
             'minute',
-            encounter_start_datetime,
-            encounter_end_datetime
+            e.encounter_start_datetime,
+            e.encounter_end_datetime
         )                                                               as encounter_duration_minutes,
 
-        month(encounter_start_datetime)                                 as encounter_month,
+        month(e.encounter_start_datetime)                               as encounter_month,
 
         datediff(
             'day',
-            lag(encounter_start_datetime) over (
-                partition by patient_id
-                order by encounter_start_datetime
+            lag(e.encounter_start_datetime) over (
+                partition by e.patient_id
+                order by e.encounter_start_datetime
             ),
-            encounter_start_datetime
+            e.encounter_start_datetime
         )                                                               as days_since_last_encounter
 
-    from encounters
+    from encounters as e
+    left join patients as p
+        on e.patient_id = p.patient_id
 
 ),
 
