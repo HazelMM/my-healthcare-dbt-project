@@ -78,7 +78,7 @@ The intermediate layer applies business logic and clinical enrichment. Key model
 - **`int_patient_encounter_summary`** — aggregates cumulative encounter counts per patient by encounter class.
 
 ### Marts
-Two semantic tables serve as the foundation for analytics and the AI agent (kept intentionally separate to prevent condition-observation fanout):
+Two semantic tables serve as the foundation for analytics and the AI agent (kept intentionally separate to prevent condition-observation fanout- A major focus of this project was preserving longitudinal grain integrity and preventing fanout across clinical entities):
 
 - **`dim_patient_disorder_episodes`** — one row per patient per condition episode. Combines demographics, cumulative encounter history, and condition timeline with clinical state classification.
 - **`patient_longitudinal_observation_spine`** — one row per patient per month per observation. Monthly biomarker snapshots with trend scoring, reference range evaluation, and distance-from-normal scoring.
@@ -88,6 +88,18 @@ Two reference datasets support the intermediate layer:
 
 - **`biomarker_reference_ranges`** — maps LOINC codes to published clinical reference ranges. Serves as both a lookup table and an allowlist for the observation pipeline. In a production workflow, these thresholds would be sourced and validated by a clinical SME.
 - **`snomed_clinical_state`** — maps SNOMED concept codes present in this dataset to clinical state (chronic/acute) and clinical category. Scoped to codes found in this Synthea subset only and not an exhaustive SNOMED reference.
+
+---
+
+## Semantic Modeling Principles
+
+This project prioritizes semantic consistency and longitudinal grain preservation across healthcare entities.
+
+Key modeling decisions include:
+- preserving source-derived clinical semantics rather than inferring unsupported ontology classifications
+- preventing fanout across conditions, encounters, and observations
+- separating raw clinical context from derived analytical logic
+- maintaining reusable longitudinal entities instead of denormalized reporting tables
 
 ---
 
