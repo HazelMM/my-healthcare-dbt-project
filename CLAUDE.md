@@ -18,7 +18,7 @@ Exclude the following categories from all staging models:
 * Redundant name components: `name_prefix`, `name_suffix`, `maiden_name`
 
 ## Naming & Column Conventions
-* All database objects, tables, and column names must be lowercase `snake_case`.
+* All dbt model names, column aliases, and CTE names use lowercase snake_case. Snowflake stores and displays identifiers in uppercase — this is expected behavior.
 * Never leave generic `description` or `title` columns. Append context: `condition_name`, `encounter_class_description`, `observation_name`.
 * Boolean indicators must be prefixed with `is_` or `has_` (e.g., `is_active_condition`, `has_abnormal_biomarker`).
 * Primary keys must be explicitly named `[entity_id]` (e.g., `patient_id`, `observation_id`). Foreign keys must reference their parent table name.
