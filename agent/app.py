@@ -31,6 +31,7 @@ def load_biomarker_reference() -> str:
 
 BIOMARKER_REFERENCE = load_biomarker_reference()
 
+
 st.set_page_config(
     page_title="Clinical Analytics Agent",
     page_icon="🩺",
@@ -129,10 +130,6 @@ ILIKE is only acceptable when the user's question is too vague to map to a speci
 
 {BIOMARKER_REFERENCE}
 
-OBSERVATION NAME NOTES:
-- Observation code QOLS has observation_name 'QOLS' and represents Quality of Life Score.
-  When users ask about quality of life, search by observation_name = 'QOLS'.
-
 CONDITION REFERENCE — SNOMED CODES:
 The following SNOMED codes map to exact condition names in DIM_PATIENT_DISORDER_EPISODES.
 Always use snomed_concept_code for exact condition matching instead of ILIKE wildcards on condition_name.
@@ -206,7 +203,6 @@ examples = [
     "Show patients whose blood pressure normalized in the summer",
     "Which chronic conditions are most common?",
     "Give me a list of patients with anemia who also have osteoporosis",
-    "Show me women with quality of life scores below 70",
     "Show me systolic blood pressure readings for patient 00209bf2-8e4d-06d1-82a4-daad02f25829",
 ]
 
@@ -269,25 +265,7 @@ if ask and question.strip():
                 st.success(f"{row_count:,} results found.")
     st.caption(f"Response time: {elapsed}s")
 
-    with st.expander("SQL generated", expanded=True):
-        st.code(sql, language="sql")
-
     if row_count > 0:
-        st.subheader("Raw data")
-        display_df = df.head(200)
-        if row_count > 200:
-            st.caption(f"Showing 200 of {row_count:,} rows")
-        else:
-            st.caption(f"Showing all {row_count:,} rows")
-        st.dataframe(display_df, use_container_width=True)
-        csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            label=f"Download CSV ({row_count:,} rows)",
-            data=csv,
-            file_name="clinical_query_results.csv",
-            mime="text/csv",
-        )
-
         cols = df.columns.tolist()
         if (
             "spine_month" in cols
@@ -308,6 +286,25 @@ if ask and question.strip():
                 .set_index("spine_month")
             )
             st.line_chart(chart_df)
+
+    with st.expander("SQL generated", expanded=True):
+        st.code(sql, language="sql")
+
+    if row_count > 0:
+        st.subheader("Raw data")
+        display_df = df.head(200)
+        if row_count > 200:
+            st.caption(f"Showing 200 of {row_count:,} rows")
+        else:
+            st.caption(f"Showing all {row_count:,} rows")
+        st.dataframe(display_df, use_container_width=True)
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label=f"Download CSV ({row_count:,} rows)",
+            data=csv,
+            file_name="clinical_query_results.csv",
+            mime="text/csv",
+        )
 
     st.divider()
     st.caption(
