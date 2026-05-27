@@ -41,8 +41,6 @@ Observations are filtered to `observation_category IN ('laboratory', 'vital-sign
 
 - **Tobacco smoking status (`72166-2`)** — classified as social history in the source but clinically relevant as a longitudinal risk factor alongside disorder conditions.
 - **PHQ-9 total score (`44261-6`)** — the most clinically validated mental health screening instrument. Included because mental health trajectory alongside chronic physical conditions is a meaningful analytical signal.
-- **Quality of Life Score (`QOLS`)** — patient-level longitudinal wellbeing metric. Included because it provides a whole-person perspective on health state over time that complements biomarker data.
-
 Categories fully excluded: social history (beyond smoking), survey (beyond PHQ-9), procedure, imaging, therapy. These either lack numeric values suitable for trend analysis or fall outside the clinical scope of this layer.
 
 ---
