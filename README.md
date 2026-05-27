@@ -8,7 +8,12 @@ Using dbt and Snowflake, the project models patient health trajectories across c
 
 Rather than treating healthcare data as isolated reporting tables, this project emphasizes longitudinal patient state modeling, semantic normalization, and clinically meaningful context generation.
 
-[Synthea by MITRE](https://synthea.mitre.org/downloads)
+The semantic layer is exposed through a natural language AI agent — built with the Claude API and Streamlit — that allows users to query the clinical dataset using plain English and receive back auditable SQL, tabular results, and downloadable exports.
+
+**[🩺 Try the live demo](https://clinical-analytics-agent-demo.streamlit.app/)**
+
+> Built with synthetic data only. No real patient information is used or stored.
+> Data source: [Synthea by MITRE](https://synthea.mitre.org/downloads)
 
 ---
 
@@ -21,15 +26,10 @@ Build patient-centric analytical models that capture changes in health state ove
 Normalize and organize clinical concepts (SNOMED-CT conditions, biomarker observations, encounter events) into reusable semantic domains and governed analytical entities.
 
 ### Biomarker & Observation Standardization
-Standardize laboratory observations and vital measurements into consistent, queryable longitudinal structures suitable for analytics and feature engineering.
+Standardize laboratory observations and vital measurements into consistent, queryable longitudinal structures suitable for analytics and feature engineering. Biomarker reference ranges are maintained as a versioned seed file — in a production workflow these thresholds would be sourced and validated by a clinical subject matter expert.
 
 ### AI-Ready Clinical Context
-Create semantically structured datasets designed to support:
-- downstream machine learning workflows
-- retrieval-augmented AI systems
-- clinical summarization
-- cohort analysis
-- patient phenotyping
+Create semantically structured datasets optimized for natural language querying, machine learning feature engineering, and AI-assisted clinical analysis.
 
 ---
 
@@ -39,60 +39,99 @@ Create semantically structured datasets designed to support:
 |---|---|
 | Cloud Data Warehouse | Snowflake |
 | Transformation Framework | dbt Core (`dbt-snowflake`) |
+| AI Agent Interface and Agent | Streamlit + Claude API (`claude-sonnet-4-6`) |
 | Development Environment | GitHub Codespaces |
 | Source Dataset | Synthea Synthetic Healthcare Data |
 
 ---
 
-## Source Tables
+## Architecture (DAG)
 
-### `PATIENTS`
-Patient demographic and baseline identity information.
+```
+Raw Synthea CSVs loaded into Snowflake (patients, conditions, observations, encounters)
+        │
+        ▼
+    Staging Layer          ← source cleaning, type casting, surrogate keys
+        │
+        ▼
+  Intermediate Layer       ← business logic, clinical enrichment, trend scoring
+        │
+        ▼
+    Marts Layer            ← two semantic tables, materialized as Snowflake tables
+        │
+        ├── dim_patient_disorder_episodes
+        └── patient_longitudinal_observation_spine
+                │
+                ▼
+        AI Agent (Streamlit + Claude API)
+```
 
-### `CONDITIONS`
-Longitudinal diagnosis history and SNOMED-CT clinical condition records.
+### Staging
+One model per source table. Cleans raw data, renames columns, casts types, generates surrogate keys, and deduplicates. Regex transformations are isolated here and do not travel downstream.
 
-### `OBSERVATIONS`
-Laboratory results, biomarker measurements, and vital sign observations captured over time.
+### Intermediate
+The intermediate layer applies business logic and clinical enrichment. Key models:
 
-### `ENCOUNTERS`
-Clinical interaction events representing healthcare utilization and patient touchpoints.
+- **`int_condition_disorders`** — filters conditions to `clinical_semantic_tag = 'disorder'` only, following SNOMED CT ontology. Joins to the SNOMED clinical state seed to classify each condition as chronic or acute and assign a clinical category (cardiovascular, renal, oncologic, etc.)
+- **`int_observation_clinical`** — inner joins observations to the biomarker reference ranges seed, which acts as an allowlist. Only observations with a matching LOINC code are carried forward. Calculates `distance_from_normal` — how far each reading sits from its published reference range boundary.
+- **`int_observation_trend`** — lags `distance_from_normal` to derive `trend_status`: `improving`, `worsening`, `normalized`, or `stable`. Split into a separate model from `int_observation_clinical` because Snowflake does not support the WINDOW clause inside a CTE.
+- **`int_patient_encounter_summary`** — aggregates cumulative encounter counts per patient by encounter class.
+
+### Marts
+Two semantic tables serve as the foundation for analytics and the AI agent (kept intentionally separate to prevent condition-observation fanout):
+
+- **`dim_patient_disorder_episodes`** — one row per patient per condition episode. Combines demographics, cumulative encounter history, and condition timeline with clinical state classification.
+- **`patient_longitudinal_observation_spine`** — one row per patient per month per observation. Monthly biomarker snapshots with trend scoring, reference range evaluation, and distance-from-normal scoring.
+
+### Seeds
+Two reference datasets support the intermediate layer:
+
+- **`biomarker_reference_ranges`** — maps LOINC codes to published clinical reference ranges. Serves as both a lookup table and an allowlist for the observation pipeline. In a production workflow, these thresholds would be sourced and validated by a clinical SME.
+- **`snomed_clinical_state`** — maps SNOMED concept codes present in this dataset to clinical state (chronic/acute) and clinical category. Scoped to codes found in this Synthea subset only and not an exhaustive SNOMED reference.
 
 ---
 
-## Biomarker Abnormality Business Rules
+## AI Agent
 
-The `stg_observations` model flags clinically abnormal biomarker readings via the `has_abnormal_biomarker` column. Thresholds are applied by observation code and are based on standard clinical reference ranges for the chronic disease cohorts tracked in this project.
+The Streamlit agent translates natural language questions into Snowflake SQL using the Claude API. It queries two mart tables only, via a dedicated read-only Snowflake role (`CLINICAL_AGENT_ROLE`) scoped exclusively to those tables.
 
-| Observation | Code | Threshold | Clinical Basis |
-|---|---|---|---|
-| HbA1c | `4548-4` | > 6.5% | ADA diabetes diagnosis threshold |
-| Fasting Glucose | `2339-0` | >= 126 mg/dL | ADA diabetes diagnosis threshold |
-| eGFR | `33914-3` | < 60 mL/min/1.73m² | KDIGO CKD staging threshold |
-| Systolic Blood Pressure | `8480-6` | >= 130 mmHg | AHA Stage 1 hypertension threshold |
+**Security design:**
+- `CLINICAL_AGENT_USER` has SELECT on mart tables only — no access to staging, intermediate, or raw data
+- No PHI in the mart tables — no names, addresses, or direct identifiers
+- Future grants applied so table-level access persists across dbt runs
+- All credentials managed via environment variables, never hardcoded
 
-These rules are isolated in the staging layer and should not be re-implemented in intermediate or mart models. Downstream models should reference `has_abnormal_biomarker` directly.
-
----
-
-## Planned Semantic Models
-
-### Patient Health Profile
-Patient-centric longitudinal clinical summary.
-
-### Biomarker Trend Models
-Normalized biomarker trajectories across time and clinical states.
-
-### Clinical State Models
-Semantic categorization of chronic, acute, and physiological conditions.
-
-### AI-Ready Feature Tables
-Structured analytical datasets optimized for downstream AI and machine learning workflows.
+**Capabilities:**
+- Natural language to SQL translation
+- Out-of-scope detection — returns a plain English explanation instead of guessing
+- Automatic time series chart for single-patient observation queries
+- CSV download for any result set
+- Row preview capped at 200 rows; full dataset available via download
 
 ---
 
-## Project Direction
+## Running Locally
 
-This project explores how modern analytics engineering practices can create trustworthy semantic foundations for AI-enabled healthcare systems.
+**Prerequisites:** Snowflake account, Python 3.12+, dbt Core with `dbt-snowflake`.
 
-A major focus of the project is evaluating where AI-assisted development accelerates analytics engineering workflows — and where human semantic validation, governance, and clinical context remain essential.
+Setup instructions follow standard dbt and Streamlit conventions. See `clinical_analytics/dbt_project.yml` and `agent/requirements.txt` for dependencies. Credentials are managed via environment variables — see the security design notes in the AI Agent section above.
+
+---
+
+## Key Engineering Decisions
+
+See [DECISIONS.md](./DECISIONS.md) for detailed reasoning behind modeling choices including grain selection, materialization strategy, the biomarker seed as allowlist, comorbidity handling, trend scoring logic, and the read-only agent security model.
+
+---
+
+## Lessons Learned
+
+See [LESSONS.md](./LESSONS.md) for a write-up on designing and implementing agentic workflows — including what worked, what didn't, and what I would do differently.
+
+---
+
+## Notes on Scope
+
+- Conditions are filtered to SNOMED `disorder` semantic tag only. Some clinically common conditions carry a different SNOMED tag and are not present in this dataset.
+- Biomarker reference ranges are general published standards (sourced using Claude AI), not institution-specific thresholds. Clinical interpretation remains with qualified practitioners.
+- All data is Synthea-generated synthetic data. Not intended for clinical use.
