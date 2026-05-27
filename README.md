@@ -124,12 +124,6 @@ See [DECISIONS.md](./DECISIONS.md) for detailed reasoning behind modeling choice
 
 ---
 
-## Lessons Learned
-
-See [LESSONS.md](./LESSONS.md) for a write-up on designing and implementing agentic workflows — including what worked, what didn't, and what I would do differently.
-
----
-
 ## Notes on Scope
 
 - Conditions are filtered to SNOMED `disorder` semantic tag only. Some clinically common conditions carry a different SNOMED tag and are not present in this dataset.
