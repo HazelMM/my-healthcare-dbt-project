@@ -45,8 +45,7 @@ real patient care or clinical decision-making.
 
 {% docs biomarker_reference_ranges__loinc_code %}
 The Logical Observation Identifiers Names and Codes (LOINC) code identifying the clinical observation
-or test. A small number of entries use SNOMED CT codes or proprietary identifiers (e.g., QOLS) where
-no standard LOINC equivalent exists. Forms part of the composite grain key alongside `category`.
+or test. Forms part of the composite grain key alongside `category`.
 {% enddocs %}
 
 {% docs biomarker_reference_ranges__observation_name %}
